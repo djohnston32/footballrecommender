@@ -3,6 +3,14 @@ from requests.auth import HTTPBasicAuth
 import json
 import time
 
+"""
+gamestate = sbd["scoreboard"]["gameScore"][0]
+down = gamestate["currentDown"]
+distance = gamestate["currentYardsRemaining"]
+yardline = gamestate["lineOfScrimmage"] # dict
+"""
+
+
 # TODO Prompt for username and password at startup
 USERNAME = "devinjohnston17"
 PASSWORD = "Iamthe71"
@@ -19,8 +27,18 @@ def getScoreboard(fordate):
     r = requests.get(url_scoreboard, auth=(USERNAME, PASSWORD))
     return r.text
 
+def getPlayByPlay(gameID):
+    url_scoreboard = "https://www.mysportsfeeds.com/api/feed/pull/nfl/" + CURRENT_SEASON + "/game_playbyplay.json?gameid=" + gameID
+    r = requests.get(url_scoreboard, auth=(USERNAME, PASSWORD))
+    return r.text
+
+# TODO
+def parseJSON(requestText):
+    decoded = json.loads(requestText)
+    print decoded
+
 # TODO Catch Ctrl-c
-# TODO Encapsulate responses in json object
+# TODO Encapsulate responses in json object (?)
 def logResponses():
     log = open("log.txt", "w")
     fordate = "20161020"
