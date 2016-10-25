@@ -11,8 +11,8 @@ distance = gamestate["currentYardsRemaining"]
 yardline = gamestate["lineOfScrimmage"] # dict
 
 - Produce list of ongoing Games from json Scoreboard response
-    - Create skeleton python object for a game
-    - Extract individual games from json Scoreboard response
+    + Create skeleton python object for a game
+    + Extract individual games from json Scoreboard response
     ^ Write constructor for python Game object that takes in a json game object
 
 - Create pretty print method for Game
@@ -93,10 +93,16 @@ yardline = gamestate["lineOfScrimmage"] # dict
 - Prepare deliverables: 12/01 - 12/08
 """
 
+"""
+gamestate = sbd["scoreboard"]["gameScore"][0]
+down = gamestate["currentDown"]
+distance = gamestate["currentYardsRemaining"]
+yardline = gamestate["lineOfScrimmage"] # dict
+"""
 
 # TODO Prompt for username and password at startup
 USERNAME = "devinjohnston17"
-PASSWORD = "Iamthe71"
+PASSWORD = ""
 
 CURRENT_SEASON = "2016-2017-regular"
 
@@ -112,16 +118,13 @@ def getScoreboard(fordate):
     r = requests.get(url_scoreboard, auth=(USERNAME, PASSWORD))
     return r.text
 
-def getPlayByPlay(gameID):
-    url_scoreboard = "https://www.mysportsfeeds.com/api/feed/pull/nfl/" + CURRENT_SEASON + \
-            "/game_playbyplay.json?gameid=" + gameID
-    r = requests.get(url_scoreboard, auth=(USERNAME, PASSWORD))
-    return r.text
-
 # TODO
-def parseJSON(requestText):
+def getGameList(requestText):
     decoded = json.loads(requestText)
-    print decoded
+    gameList = []
+    for game in decoded["scoreboard"]["gameScore"]:
+        # Make Game object
+    return gameList
 
 # TODO Catch Ctrl-c
 # TODO Encapsulate responses in json object (?)
