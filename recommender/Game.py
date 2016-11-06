@@ -14,6 +14,7 @@ class Game:
         self.homeTeam = gameDict["game"]["homeTeam"]["Abbreviation"]
         self.awayTeam = gameDict["game"]["awayTeam"]["Abbreviation"]
 
+        # TODO Check for "currentQuarter" key
         self.quarter = int(gameDict["currentQuarter"])
         self.timeRemaining = int(gameDict["currentQuarterSecondsRemaining"])
 
@@ -36,6 +37,7 @@ class Game:
 
     Time
         Make buckets smaller the later it is in the game
+        Account for OT (quarter = 5)
     Score
         Change scale
         Make one- or two-score games a big p jump

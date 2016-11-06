@@ -121,23 +121,36 @@ def getGameList(decoded):
         if str(gameDict["isInProgress"]) == "true":
             try:
                 game = Game(gameDict)
-                print game
+                #print game
                 gameList.append(game)
             except KeyError as err:
                 print err
                 print gameDict
-            print "\n"
+            #print "\n"
     return sorted(gameList, key=attrgetter('priority'), reverse=True)
+
+def getNowString():
+    fordate = '20161106'
+    sb = getScoreboard(fordate)
+    d = json.loads(sb)
+    gl = getGameList(d)
+
+    returnStr = ''
+    for game in gl:
+        returnStr += game.__str__() + '\n\n'
+
+    return returnStr
+
 
 # TODO Catch Ctrl-c
 # TODO Encapsulate responses in json object
-def logResponses():
-    log = open("test.txt", "w")
+def logResponses(n):
+    log = open("11_06.txt", "w")
     fordate = "20161106"
     log.write('[')
-    for i in range(10):
+    for i in range(n):
         log.write(getScoreboard(fordate))
-        if i != 9:
+        if i != n - 1:
             log.write(",")
         time.sleep(60)
     log.write(']')
