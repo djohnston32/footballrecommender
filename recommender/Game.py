@@ -36,13 +36,24 @@ class Game:
 
     Time
         Make buckets smaller the later it is in the game
+    Score
+        Change scale
+        Make one- or two-score games a big p jump
 
     """
     def getPriority(self):
         priority = 0
         if not self.isHalftime:
             # Time Remaining
-            priority += (900 * (self.quarter - 1) + self.timeRemaining) / 180
+            pTime = (900 * (self.quarter - 1) + (900 - self.timeRemaining)) / 180
+
+            # Score
+            scoreDiff = abs(self.homeScore - self.awayScore)
+            pScore = 20 - scoreDiff
+            pScore = 0 if pScore < 0 else pScore
+
+            priority += pTime + pScore
+
         return priority
 
     def __str__(self):
