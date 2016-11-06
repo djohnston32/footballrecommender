@@ -98,7 +98,7 @@ yardline = gamestate["lineOfScrimmage"] # dict
 
 # TODO Prompt for username and password at startup
 USERNAME = "devinjohnston17"
-PASSWORD = ""
+PASSWORD = "Iamthe71"
 
 CURRENT_SEASON = "2016-2017-regular"
 
