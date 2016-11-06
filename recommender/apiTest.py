@@ -114,8 +114,8 @@ def getScoreboard(fordate):
     r = requests.get(url_scoreboard, auth=(USERNAME, PASSWORD))
     return r.text
 
-def getGameList(requestText):
-    decoded = json.loads(requestText)
+# decoded = json.loads(requestText)
+def getGameList(decoded):
     gameList = []
     for gameDict in decoded["scoreboard"]["gameScore"]:
         if str(gameDict["isInProgress"]) == "true":
@@ -132,12 +132,15 @@ def getGameList(requestText):
 # TODO Catch Ctrl-c
 # TODO Encapsulate responses in json object
 def logResponses():
-    log = open("log.txt", "w")
-    fordate = "20161023"
-    while (True):
+    log = open("test.txt", "w")
+    fordate = "20161106"
+    log.write('[')
+    for i in range(10):
         log.write(getScoreboard(fordate))
-        log.write("\n\n")
-        time.sleep(5)
+        if i != 9:
+            log.write(",")
+        time.sleep(60)
+    log.write(']')
     log.close()
 
 def main():
