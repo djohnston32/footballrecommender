@@ -33,11 +33,10 @@ from Game import Game
 
 *** Saturday 11/05 at 11:55 PM
 
-- Produce and sort list with every response
-    - Test execution time of algorithm so far (less than 1 minute essential)
-    - Keep track of last update time and don't run algorithm if unchanged
-    - Pull from local data every minute, run algorithm, pretty print results
-    ^ Optimize as necessary (potentially use a database instead of local objects)
+x Produce and sort list with every response
+    x Test execution time of algorithm so far (less than 1 minute essential)
+    x Pull from local data every minute, run algorithm, pretty print results
+    ^ Optimize as necessary
 
 - Get web app working on real time data
     ^ Write startup and exit functions to cleanly begin and end polling
