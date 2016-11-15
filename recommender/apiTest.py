@@ -31,7 +31,7 @@ from Game import Game
     - yard line (eventually consider whether trailing team has possession)
     - team records (eventually weight games within division higher)
 
-*** Saturday 11/05 at 11:55 PM
+*** Saturday 11/12 at 11:55 PM
 
 x Produce and sort list with every response
     x Test execution time of algorithm so far (less than 1 minute essential)
@@ -43,7 +43,7 @@ x Produce and sort list with every response
     - Poll from NFL Scoreboard feed every minute and run getGameList
     ^ Where possible, optimize algorithm to only update objects when necessary
 
-*** Sunday 11/06 at 11:55 PM
+*** Sunday 11/13 at 11:55 PM
 
 - *Optional* Use Materialize to improve look and feel
 
@@ -63,13 +63,13 @@ x Produce and sort list with every response
     ^ Ask user basic questions on why game is in wrong spot (e.g. score not close enough, too much time, don't like teams)
     - Adjust weighting based on response
 
-*** Saturday 11/12 at 11:55 PM
+*** Saturday 11/19 at 11:55 PM
 
 - Testing and adjusting
     - Use app throughout NFL Sunday
     - Address problems as necessary
 
-*** Sunday 11/13 at 11:55 PM
+*** Sunday 11/20 at 11:55 PM
 
 ***Note***
     - Minimum Viable Product acheived at this point
@@ -97,7 +97,7 @@ yardline = gamestate["lineOfScrimmage"] # dict
 
 # TODO Prompt for username and password at startup
 USERNAME = "devinjohnston17"
-PASSWORD = "Iamthe71"
+PASSWORD = ""
 
 CURRENT_SEASON = "2016-2017-regular"
 
