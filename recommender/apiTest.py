@@ -21,7 +21,14 @@ from Game import Game
     + Weight based only on time remaining
     + Figure out how to sort shit in python (python equivalent of java comparator method?)
 
-- Get working as web app with local data
+x Produce and sort list with every response
+    x Test execution time of algorithm so far (less than 1 minute essential)
+    x Pull from local data every minute, run algorithm, pretty print results
+    ^ Optimize as necessary
+
++ *Optional* Use Materialize to improve look and feel
+
+- Get working as web app with local data ***Monday 11/21 to Tuesday 11/23***
     - Make server get json from local file every minute and run getGameList
         x hardcode list of games in demo.html
         x get list of games once from log.txt and display
@@ -29,69 +36,51 @@ from Game import Game
         - request from local file repeatedly
         - request next sb object from local file each time
             - Make log file with multiple scoreboard objects iterable
+    - Poll from NFL Scoreboard feed every minute and run getGameList
     - Make game display look nice
-    + Make frontend look nice using Materialize
 
-^ Improve Weighting algorithm
+- Improve Weighting algorithm ***Wednesday 11/23 to Thursday 11/24***
     Note: may be better to create multiple versions of getPriority (e.g. getPriority0(), getPriority1())
     - time remaining
     - score
     - yard line (eventually consider whether trailing team has possession)
     - team records (eventually weight games within division higher)
 
-x Produce and sort list with every response
-    x Test execution time of algorithm so far (less than 1 minute essential)
-    x Pull from local data every minute, run algorithm, pretty print results
-    ^ Optimize as necessary
-
-- Get web app working on real time data
-    ^ Write startup and exit functions to cleanly begin and end polling
-    - Poll from NFL Scoreboard feed every minute and run getGameList
-    ^ Where possible, optimize algorithm to only update objects when necessary
-
-*** Sunday 11/13 at 11:55 PM
-
-+ *Optional* Use Materialize to improve look and feel
-
-- Implement basic user profiles
+- Implement basic user profiles ***Wednesday 11/23***
     - Create register and login pages (no authentication yet)
     - Store username and password in database
     - Display username at top of screen
-    ^ Ask for and save favorite teams?
+    - Ask for and save favorite teams?
 
-- Personalize weights based on user input
-    ^ Use favorite teams in weighting
+- Personalize weights based on user input ***Thursday 11/24 to Friday 11/25***
+    - Use favorite teams in weighting
     - Make up/down buttons next to each game's display
     - Make upvote add flat number to weight for some amount of time
-    ^ Evaluate and make  adjustments
+    - Evaluate and make  adjustments
 
-- Potential improvements to feedback feature
-    ^ Ask user basic questions on why game is in wrong spot (e.g. score not close enough, too much time, don't like teams)
+- Potential improvements to feedback feature ***Sunday 11/27 to Wednesday 11/30***
+    - Ask user basic questions on why game is in wrong spot (e.g. score not close enough, too much time, don't like teams)
     - Adjust weighting based on response
 
-*** Saturday 11/19 at 11:55 PM
-
-- Testing and adjusting
+- Testing and adjusting ***Sunday 11/27 and Sunday 12/04***
     - Use app throughout NFL Sunday
     - Address problems as necessary
-
-*** Sunday 11/20 at 11:55 PM
 
 ***Note***
     - Minimum Viable Product acheived at this point
     - Everything after is gravy
     - Sanding rough edges most important, then fine tuning to look more impressive
 
-- General bug fixing - Week of 11/14
+- General bug fixing ***Sunday 11/27 - Sunday 11/04***
     - Fix any remaining persistent bugs
     - Improve aspects that feel shoddy, but may not necessarily be bugs
 
-- *Optional* Fine tuning: 11/21 - 11/30
+- *Optional* Fine tuning
     - Continue to tune default weighting
     ^ Continue to tune feedback mechanism
     - Improve UI
 
-- Prepare deliverables: 12/01 - 12/06
+- Prepare deliverables ***Sunday 11/27 - Sunday 12/04***
 """
 
 """
