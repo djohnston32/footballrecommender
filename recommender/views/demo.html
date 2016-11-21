@@ -4,6 +4,16 @@
     <div class="container">
       <br><br>
       <h1 class="header center orange-text">Demo</h1>
+      <div class="input-field col s12 center">
+        <select>
+          <option value="" disabled selected>Choose Demo Type</option>
+          <option value="1">Local Single</option>
+          <option value="2">Local Multiple</option>
+          <option value="3">Live Single</option>
+          <option value="4">Live Realtime</option>
+        </select>
+        <label>Demo Type Select</label>
+      </div>
       <div>
           <ul>
             {% for game in nowList %}
