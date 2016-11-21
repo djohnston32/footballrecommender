@@ -1,5 +1,7 @@
 import requests
 from requests.auth import HTTPBasicAuth
+import os
+from django.conf import settings
 import json
 import time
 from operator import attrgetter
@@ -21,8 +23,14 @@ from Game import Game
 
 - Get working as web app with local data
     - Make server get json from local file every minute and run getGameList
-    ^ Find way to send output from getGameList to frontend to display
-    - Make frontend look nice
+        x hardcode list of games in demo.html
+        x get list of games once from log.txt and display
+        x display each game as separate html element
+        - request from local file repeatedly
+        - request next sb object from local file each time
+            - Make log file with multiple scoreboard objects iterable
+    - Make game display look nice
+    + Make frontend look nice using Materialize
 
 ^ Improve Weighting algorithm
     Note: may be better to create multiple versions of getPriority (e.g. getPriority0(), getPriority1())
@@ -30,8 +38,6 @@ from Game import Game
     - score
     - yard line (eventually consider whether trailing team has possession)
     - team records (eventually weight games within division higher)
-
-*** Saturday 11/12 at 11:55 PM
 
 x Produce and sort list with every response
     x Test execution time of algorithm so far (less than 1 minute essential)
@@ -45,7 +51,7 @@ x Produce and sort list with every response
 
 *** Sunday 11/13 at 11:55 PM
 
-- *Optional* Use Materialize to improve look and feel
++ *Optional* Use Materialize to improve look and feel
 
 - Implement basic user profiles
     - Create register and login pages (no authentication yet)
@@ -107,11 +113,16 @@ def getFullSchedule():
     r = requests.get(url_schedule, auth=(USERNAME, PASSWORD))
     return r.text
 
-def getScoreboard(fordate):
-    url_scoreboard = "https://www.mysportsfeeds.com/api/feed/pull/nfl/" + CURRENT_SEASON + \
-            "/scoreboard.json?fordate=" + fordate
-    r = requests.get(url_scoreboard, auth=(USERNAME, PASSWORD))
-    return r.text
+def getScoreboard(fordate, useLocal=False):
+    if useLocal:
+        log = open(os.path.join(settings.BASE_DIR, 'log.txt'))
+        text = log.read()
+        log.close()
+    else:
+        url_scoreboard = "https://www.mysportsfeeds.com/api/feed/pull/nfl/" + CURRENT_SEASON + \
+                "/scoreboard.json?fordate=" + fordate
+        text = requests.get(url_scoreboard, auth=(USERNAME, PASSWORD)).text
+    return text
 
 # decoded = json.loads(requestText)
 def getGameList(decoded):
@@ -130,7 +141,8 @@ def getGameList(decoded):
 
 def getNowString():
     fordate = '20161106'
-    sb = getScoreboard(fordate)
+    #sb = getScoreboard(fordate)
+    sb = getScoreboard(fordate, True)
     d = json.loads(sb)
     gl = getGameList(d)
 
