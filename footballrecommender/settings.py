@@ -123,3 +123,14 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "recommender/static")
 ]
+
+
+# Channel Layer Settings
+# http://channels.readthedocs.io/en/latest/backends.html
+
+CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "asgiref.inmemory.ChannelLayer",
+            "ROUTING": "footballrecommender.routing.channel_routing"
+        }
+}
