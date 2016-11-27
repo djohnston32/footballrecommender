@@ -28,31 +28,32 @@ x Produce and sort list with every response
 
 + *Optional* Use Materialize to improve look and feel
 
-- Get working as web app with local data ***Monday 11/21 to Wednesday 11/23***
-    - Make server get json from local file every minute and run getGameList
+x Get working as web app
+    x Make server get json from local file every minute and run getGameList
         x hardcode list of games in demo.html
         x get list of games once from log.txt and display
         x display each game as separate html element
-        - request from local file repeatedly
-        - request next sb object from local file each time
-            - Make log file with multiple scoreboard objects iterable
-    - Poll from NFL Scoreboard feed every minute and run getGameList
-    - Make game display look nice
+        x request from local file repeatedly
+        x request next sb object from local file each time
+    x Request particular game from local gameList with localOne
+    x Make input for seconds to wait between requests
+    x Poll from NFL Scoreboard feed every minute and run getGameList
+    x Make game display look nice
 
 - Improve Weighting algorithm ***Wednesday 11/23 to Friday 11/25***
     Note: may be better to create multiple versions of getPriority (e.g. getPriority0(), getPriority1())
-    - time remaining
-    - score
+    x time remaining
+    x score
     - yard line (eventually consider whether trailing team has possession)
     - team records (eventually weight games within division higher)
 
-- Implement basic user profiles ***Thursday 11/23***
+- Implement basic user profiles ***Friday 11/23***
     - Create register and login pages (no authentication yet)
     - Store username and password in database
     - Display username at top of screen
     - Ask for and save favorite teams?
 
-- Personalize weights based on user input ***Thursday 11/24 to Friday 11/25***
+- Personalize weights based on user input ***Friday 11/24 to Sunday 11/25***
     - Use favorite teams in weighting
     - Make up/down buttons next to each game's display
     - Make upvote add flat number to weight for some amount of time

@@ -5,18 +5,18 @@
       <br><br>
       <h1 class="header center orange-text">Demo</h1>
       <div class="row">
+          <input id="index" type="number" class="validate">
+          <label for="index">Poll which game list?</label>
+          <input id="wait" type="number" class="validate">
+          <label for="wait">Wait time</label>
+      </div>
+      <div class="row">
         <button id="localPollOne" class="btn waves-effect waves-light">Poll Once (Local)</button>
         <button id="localPollRepeat" class="btn waves-effect waves-light">Poll Repeat (Local)</button>
         <button id="livePollOne" class="btn waves-effect waves-light">Poll Once (Live)</button>
         <button id="livePollRepeat" class="btn waves-effect waves-light">Poll Repeat (Live)</button>
       </div>
-      <div id="games">
-          <ul>
-            {% for game in nowList %}
-              <li>{{ game }}</li>
-            {% endfor %}
-          </ul> 
-      </div>
+      <div id="games" style="white-space:pre-wrap"></div>
       <br><br>
     </div>
   </div>

@@ -15,20 +15,26 @@ class Game:
         self.awayTeam = gameDict["game"]["awayTeam"]["Abbreviation"]
 
         # TODO Check for "currentQuarter" key
-        self.quarter = int(gameDict["currentQuarter"])
-        self.timeRemaining = int(gameDict["currentQuarterSecondsRemaining"])
+        self.isPrestart = "currentQuarter" not in gameDict
+        if not self.isPrestart:
+            self.quarter = int(gameDict["currentQuarter"])
+            self.timeRemaining = int(gameDict["currentQuarterSecondsRemaining"])
 
-        self.isHalftime = self.quarter == 2 and self.timeRemaining == 0
+            self.isHalftime = self.quarter == 2 and self.timeRemaining == 0
 
         self.homeScore = int(gameDict["homeScore"])
         self.awayScore = int(gameDict["awayScore"])
 
-        if not self.isHalftime:
-            self.possession = gameDict["teamInPossession"]
+        if not (self.isPrestart or self.isHalftime):
             self.down = int(gameDict["currentDown"])
             self.toGo = int(gameDict["currentYardsRemaining"])
-            self.yardLine = gameDict["lineOfScrimmage"] # dict of form: {"yardLine" : 35, "team" : "KC"}
-            self.yardLine["yardLine"] = int(self.yardLine["yardLine"])
+            if "teamInPossession" in gameDict:
+                self.possession = gameDict["teamInPossession"]
+                # dict of form: {"yardLine" : 35, "team" : "KC"}
+                self.yardLine = gameDict["lineOfScrimmage"]
+                self.yardLine["yardLine"] = int(self.yardLine["yardLine"])
+            else:
+                self.possession = ""
 
         self.priority = self.getPriority()
 
@@ -45,7 +51,7 @@ class Game:
     """
     def getPriority(self):
         priority = 0
-        if not self.isHalftime:
+        if not (self.isPrestart or self.isHalftime):
             # Time Remaining
             pTime = (900 * (self.quarter - 1) + (900 - self.timeRemaining)) / 180
 
@@ -61,11 +67,17 @@ class Game:
     def __str__(self):
         s = self.homeTeam + ": " + str(self.homeScore) + "\n"
         s += self.awayTeam + ": " + str(self.awayScore) + "\n"
-        if self.isHalftime:
+        if self.isPrestart:
+            s += "Starting Soon..."
+        elif self.isHalftime:
             s += "Halftime"
         else:
-            s += "Quarter: " + str(self.quarter) + "   Remaining: " + str(self.timeRemaining) + "\n"
-            s += "Possession: " + self.possession + "\n"
-            s += str(self.down) + " and " + str(self.toGo) + " on the " + self.yardLine["team"] + " " + \
-                str(self.yardLine["yardLine"])
+            s += "Quarter: " + str(self.quarter) + "   Remaining: " + \
+                    str(self.timeRemaining / 60) + ":" + str(self.timeRemaining % 60) + "\n"
+            if self.possession:
+                s += "Possession: " + self.possession + "\n"
+                s += str(self.down) + " and " + str(self.toGo) + " on the " + self.yardLine["team"] + \
+                        " " + str(self.yardLine["yardLine"])
+            else:
+                s += "No Possession?"
         return s
