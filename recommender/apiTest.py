@@ -19,14 +19,14 @@ from Game import Game
 + Sort Game list into proper priority
     + Create basic weighting for Game object
     + Weight based only on time remaining
-    + Figure out how to sort shit in python (python equivalent of java comparator method?)
+    + Figure out how to sort objects in python
 
 x Produce and sort list with every response
     x Test execution time of algorithm so far (less than 1 minute essential)
     x Pull from local data every minute, run algorithm, pretty print results
     ^ Optimize as necessary
 
-+ *Optional* Use Materialize to improve look and feel
++ <Optional> Use Materialize to improve look and feel
 
 x Get working as web app
     x Make server get json from local file every minute and run getGameList
@@ -48,17 +48,18 @@ x Get working as web app
         <optional> consider whether trailing team has possession
     - team records
         <optional> weight games within division higher
+    - General Tuning (see getPriority() method in Game.py)
 
-- Implement basic user profiles ***Monday 11/28***
+- Implement basic user profiles ***Tuesday 11/29***
     - Create register and login pages (no authentication yet)
     - Direct to demo
         - Include submit button and demo button
     - Store username and password in database
     - Display username at top of screen
-    <optional> Ask for and save favorite teams?
+    <optional> Ask for and save favorite teams
 
-- Personalize weights based on user input ***Monday 11/28 - Thursday 11/29***
-    - Use favorite teams in weighting
+- Personalize weights based on user input ***Tuesday 11/29 - Thursday 11/30***
+    - Use fafreco23vorite teams in weighting
     - Make up/down buttons next to each game's display
     - Make upvote add flat number to weight for some amount of time
     - Evaluate and make  adjustments
@@ -69,7 +70,6 @@ x Get working as web app
         - display simple "check back sunday" message
         - display games on Sunday ranked by gametime
         - display games on Sunday also ranked by team record
-
 
 <optional> Potential improvements to feedback feature ***Friday 12/02***
     - Ask user basic questions on why game is in wrong spot (e.g. score not close enough, too much time, don't like teams)

@@ -6,6 +6,7 @@ import os
 from django.conf import settings
 from operator import attrgetter
 from Game import Game
+from channels import Group
 
 
 # Data access functions
@@ -77,10 +78,20 @@ def getSbList():
     return sbList
 
 
+# Channels code
+
+# Add to main group on websocket.connect
+def ws_add(message):
+    Group("main").add(message.reply_channel)
+
 # Respond to message
 def ws_message(message):
-    print type(message)
-    if "localOne" in message.content['text']:
+    if "main" in message.content['text']:
+        Group("main").send({
+            "text": "TODO"
+        })
+
+    elif "localOne" in message.content['text']:
         sbList = getSbList()
         i = int(message.content['text'].split()[1])
         gameString = getGameString(sbList[i])
@@ -115,3 +126,7 @@ def ws_message(message):
         message.reply_channel.send({
             "text": "Action not received or not recognized",
         })
+
+# Remove from main group on websocket.disconnect
+def ws_disconnect(message):
+    Group("main").discard(message.reply_channel)
