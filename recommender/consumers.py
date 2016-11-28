@@ -12,9 +12,20 @@ from Game import Game
 
 # TODO Prompt for username and password at startup
 USERNAME = "devinjohnston17"
-PASSWORD = ""
+PASSWORD = "Iamthe71"
 
 CURRENT_SEASON = "2016-2017-regular"
+
+def getStandings():
+    url_standings = "https://www.mysportsfeeds.com/api/feed/pull/nfl/" + CURRENT_SEASON + \
+            "/overall_team_standings.json?teamstats=W"
+    r = requests.get(url_standings, auth=(USERNAME, PASSWORD))
+    standings = json.loads(r.text)
+    teamList = standings['overallteamstandings']['teamstandingsentry']
+    rankings = {}
+    for team in teamList:
+        rankings[team['team']['Abbreviation']] = team['rank']
+    return rankings
 
 def getScoreboard(fordate, useLocal=False):
     if useLocal:

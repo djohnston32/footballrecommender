@@ -36,6 +36,7 @@ class Game:
             else:
                 self.possession = ""
 
+        self.rankscore = "None"
         self.priority = self.getPriority()
 
     """
@@ -47,25 +48,40 @@ class Game:
     Score
         Change scale
         Make one- or two-score games a big p jump
+    Yardline
+
+    Team Records
+        Get team record in Game object
 
     """
     def getPriority(self):
         priority = 0
         if not (self.isPrestart or self.isHalftime):
-            # Time Remaining
-            pTime = (900 * (self.quarter - 1) + (900 - self.timeRemaining)) / 180
-
             # Score
             scoreDiff = abs(self.homeScore - self.awayScore)
             pScore = 20 - scoreDiff
             pScore = 0 if pScore < 0 else pScore
 
-            priority += pTime + pScore
+            # Time Remaining
+            pTime = (900 * (self.quarter - 1) + (900 - self.timeRemaining)) / 180
+
+            #Yard Line
+            if self.possession and self.possession != self.yardLine["team"]:
+                pYardLine = 2 * ((50 - self.yardLine["yardLine"]) / 10)
+            else:
+                pYardLine = 0
+
+            self.rankscore = "pTime: " + str(pTime) + ", pScore: " + str(pScore) + ", pYardLine: " + str(pYardLine)
+
+            priority += pTime + pScore + pYardLine
 
         return priority
 
     def __str__(self):
-        s = self.homeTeam + ": " + str(self.homeScore) + "\n"
+        s = ""
+        s += "Ranking Score: " + str(self.priority) + "\n"
+        s += self.rankscore + "\n"
+        s += self.homeTeam + ": " + str(self.homeScore) + "\n"
         s += self.awayTeam + ": " + str(self.awayScore) + "\n"
         if self.isPrestart:
             s += "Starting Soon..."
@@ -73,7 +89,7 @@ class Game:
             s += "Halftime"
         else:
             s += "Quarter: " + str(self.quarter) + "   Remaining: " + \
-                    str(self.timeRemaining / 60) + ":" + str(self.timeRemaining % 60) + "\n"
+                    str(self.timeRemaining / 60) + ":" + str(self.timeRemaining % 60).zfill(2) + "\n"
             if self.possession:
                 s += "Possession: " + self.possession + "\n"
                 s += str(self.down) + " and " + str(self.toGo) + " on the " + self.yardLine["team"] + \

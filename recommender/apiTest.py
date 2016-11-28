@@ -40,26 +40,38 @@ x Get working as web app
     x Poll from NFL Scoreboard feed every minute and run getGameList
     x Make game display look nice
 
-- Improve Weighting algorithm ***Wednesday 11/23 to Friday 11/25***
+- Improve Weighting algorithm
     Note: may be better to create multiple versions of getPriority (e.g. getPriority0(), getPriority1())
     x time remaining
     x score
-    - yard line (eventually consider whether trailing team has possession)
-    - team records (eventually weight games within division higher)
+    x yard line
+        <optional> consider whether trailing team has possession
+    - team records
+        <optional> weight games within division higher
 
-- Implement basic user profiles ***Friday 11/23***
+- Implement basic user profiles ***Monday 11/28***
     - Create register and login pages (no authentication yet)
+    - Direct to demo
+        - Include submit button and demo button
     - Store username and password in database
     - Display username at top of screen
-    - Ask for and save favorite teams?
+    <optional> Ask for and save favorite teams?
 
-- Personalize weights based on user input ***Friday 11/24 to Sunday 11/25***
+- Personalize weights based on user input ***Monday 11/28 - Thursday 11/29***
     - Use favorite teams in weighting
     - Make up/down buttons next to each game's display
     - Make upvote add flat number to weight for some amount of time
     - Evaluate and make  adjustments
 
-- Potential improvements to feedback feature ***Sunday 11/27 to Wednesday 11/30***
+- Make "actual" web app ***Thursday 12/01 - Friday 12/02***
+    - Requests scoreboard every minute on load
+    - Display details if no scoreboard
+        - display simple "check back sunday" message
+        - display games on Sunday ranked by gametime
+        - display games on Sunday also ranked by team record
+
+
+<optional> Potential improvements to feedback feature ***Friday 12/02***
     - Ask user basic questions on why game is in wrong spot (e.g. score not close enough, too much time, don't like teams)
     - Adjust weighting based on response
 
@@ -113,6 +125,17 @@ def getScoreboard(fordate, useLocal=False):
                 "/scoreboard.json?fordate=" + fordate
         text = requests.get(url_scoreboard, auth=(USERNAME, PASSWORD)).text
     return text
+
+def getStandings():
+    url_standings = "https://www.mysportsfeeds.com/api/feed/pull/nfl/" + CURRENT_SEASON + \
+            "/overall_team_standings.json?teamstats=W"
+    r = requests.get(url_standings, auth=(USERNAME, PASSWORD))
+    standings = json.loads(r.text)
+    teamList = standings['overallteamstandings']['teamstandingsentry']
+    rankings = {}
+    for team in teamList:
+        rankings[team['team']['Abbreviation']] = team['rank']
+    return rankings
 
 # decoded = json.loads(requestText)
 def getGameList(decoded):
