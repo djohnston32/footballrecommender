@@ -51,10 +51,10 @@ x Get working as web app
     - General Tuning (see getPriority() method in Game.py)
 
 - Implement basic user profiles ***Tuesday 11/29***
-    - Create register and login pages (no authentication yet)
-    - Direct to demo
-        - Include submit button and demo button
+    x Create register and login pages (no authentication yet)
+        x Include submit button and demo button
     - Store username and password in database
+    - Direct to app after successful register/login
     - Display username at top of screen
     <optional> Ask for and save favorite teams
 
