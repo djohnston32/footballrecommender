@@ -1,8 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 import requests
 from requests.auth import HTTPBasicAuth
 from forms import RegisterForm, LoginForm
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login as auth_login
 
 
 def index(request):
@@ -14,11 +17,16 @@ def register(request):
         form.is_valid()
         username = form.cleaned_data["username"]
         password = form.cleaned_data["password"]
+        demo = form.cleaned_data["demo"]
 
-        #new_user = User(email=email, password=password, user_type=user_type)
-        #new_user.save() # save the new user to the database
+        new = User.objects.create_user(username=username, password=password)
+        new.save()
 
-        return redirect_user_to_homepage(new_user)
+        user = authenticate(username=username, password=password)
+        auth_login(request, user)
+
+        path = "/recommender/demo" if demo else "/recommender/main/"
+        return HttpResponseRedirect(path)
     else:
         form = RegisterForm()
     return render(request, "register.html", { "form": form })
@@ -29,28 +37,21 @@ def login(request):
         form.is_valid()
         username = form.cleaned_data["username"]
         password = form.cleaned_data["password"]
+        demo = form.cleaned_data["demo"]
 
-        """
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            # Re-render the login with a failure message
-            return render(request, "login.html", { "invalid_email": True, "form": blank_form })
-
-        # Check that the passwords match
-        if user.password == password:
-            # Redirect the user to their home page
-            return redirect_user_to_homepage(user)
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            auth_login(request, user)
+            path = "/recommender/demo" if demo else "/recommender/main/"
+            return HttpResponseRedirect(path)
         else:
-            # Reject the login and notify that the password was wrong
             return render(request, "login.html", { "invalid_password": True, "form": blank_form })
-        """
     else:
         form = LoginForm()
     return render(request, "login.html", { "form": form })
 
 def demo(request):
     context = {
-        'gameList': []
+        'username': request.user.username
     }
     return render(request, "demo.html", context)

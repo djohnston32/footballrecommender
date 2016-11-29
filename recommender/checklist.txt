@@ -40,19 +40,21 @@ x Get working as web app
         <optional> weight games within division higher
     - General Tuning (see getPriority() method in Game.py)
 
-- Implement basic user profiles ***Tuesday 11/29***
+x Implement basic user profiles
     x Create register and login pages (no authentication yet)
-        x Include submit button and demo button
-    - Store username and password in database
-    - Direct to app after successful register/login
-    - Display username at top of screen
+        x Include main option and demo option
+    x Store username and password in database
+    x Direct to app/demo after successful register/login
+    x Display username at top of screen
     <optional> Ask for and save favorite teams
 
 - Personalize weights based on user input ***Tuesday 11/29 - Thursday 11/30***
-    - Use fafreco23vorite teams in weighting
+    - Implement weighting in Game.py
     - Make up/down buttons next to each game's display
+        - Implement toJsonString() in Game.py
     - Make upvote add flat number to weight for some amount of time
-    - Evaluate and make  adjustments
+        - Make weights save to user profile
+    <optional> Use fafreco23vorite teams in weighting
 
 - Make "actual" web app ***Thursday 12/01 - Friday 12/02***
     - Requests scoreboard every minute on load
