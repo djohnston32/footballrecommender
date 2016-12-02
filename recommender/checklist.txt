@@ -48,27 +48,27 @@ x Implement basic user profiles
     x Display username at top of screen
     <optional> Ask for and save favorite teams
 
-- Personalize weights based on user input ***Tuesday 11/29 - Thursday 11/30***
+- Personalize weights based on user input ***Thursday 12/01 - Saturday 12/03***
     - Implement weighting in Game.py
     - Make up/down buttons next to each game's display
-        - Implement toJsonString() in Game.py
+        x Implement toJsonString() in Game.py
     - Make upvote add flat number to weight for some amount of time
         - Make weights save to user profile
     <optional> Use fafreco23vorite teams in weighting
 
-- Make "actual" web app ***Thursday 12/01 - Friday 12/02***
+- Make "actual" web app ***Friday 12/02 - Saturday 12/03***
     - Requests scoreboard every minute on load
     - Display details if no scoreboard
         - display simple "check back sunday" message
         - display games on Sunday ranked by gametime
         - display games on Sunday also ranked by team record
 
-<optional> Potential improvements to feedback feature ***Friday 12/02***
+<optional> Potential improvements to feedback feature ***Saturday 12/03***
     - Ask user basic questions on why game is in wrong spot (e.g. score not close enough, too much time, don't like teams)
     - Adjust weighting based on response
 
 - Testing and adjusting ***Sunday 11/27 and Sunday 12/04***
-    - Use app throughout NFL Sunday
+    - Use app throughout NFL Sundays
     - Address problems as necessary
 
 ------------------------------------------------------------------------------------------------------------------------------

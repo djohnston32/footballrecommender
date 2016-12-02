@@ -1,3 +1,5 @@
+import json
+
 class Game:
     """
     Contains a real-time representation of a single football game
@@ -76,6 +78,9 @@ class Game:
             priority += pTime + pScore + pYardLine
 
         return priority
+
+    def toJsonString(self):
+        return json.dumps(self.__dict__)
 
     def __str__(self):
         s = ""
