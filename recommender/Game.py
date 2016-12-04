@@ -12,7 +12,7 @@ class Game:
     yardline = gamestate["lineOfScrimmage"] # dict
     """
 
-    def __init__(self, gameDict):
+    def __init__(self, gameDict, weights=(10,10,10,10)):
         self.homeTeam = gameDict["game"]["homeTeam"]["Abbreviation"]
         self.awayTeam = gameDict["game"]["awayTeam"]["Abbreviation"]
 
@@ -39,7 +39,7 @@ class Game:
                 self.possession = ""
 
         self.rankscore = "None"
-        self.priority = self.getPriority()
+        self.priority = self.getPriority(weights)
 
     """
     TODO
@@ -56,7 +56,9 @@ class Game:
         Get team record in Game object
 
     """
-    def getPriority(self):
+    # Weights is a tuple where values 0 through 3 are weights for score, time remaining,
+    #    yardline, and team ranking, respectively
+    def getPriority(self, weights):
         priority = 0
         if not (self.isPrestart or self.isHalftime):
             # Score
@@ -73,9 +75,17 @@ class Game:
             else:
                 pYardLine = 0
 
+            #Team Ranking (based on record)
+            pRank = 0
+
             self.rankscore = "pTime: " + str(pTime) + ", pScore: " + str(pScore) + ", pYardLine: " + str(pYardLine)
 
-            priority += pTime + pScore + pYardLine
+            pScore = pScore * weights[0]
+            pTime = pTime * weights[1]
+            pYardLine = pYardLine * weights[2]
+            pRank = pRank * weights[3]
+
+            priority += pTime + pScore + pYardLine + pRank
 
         return priority
 

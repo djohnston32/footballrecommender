@@ -39,7 +39,7 @@ def getScoreboard(fordate, useLocal=False):
         text = requests.get(url_scoreboard, auth=(USERNAME, PASSWORD)).text
     return text
 
-# decoded = json.loads(requestText)
+# Old method here for reference. Using getJsonString() now instead.
 def getGameString(decoded):
     gameList = []
     for gameDict in decoded["scoreboard"]["gameScore"]:
@@ -60,12 +60,36 @@ def getGameString(decoded):
 
     return gameString
 
+def getJsonString(decoded):
+    gameList = []
+    for gameDict in decoded["scoreboard"]["gameScore"]:
+        if str(gameDict["isInProgress"]) == "true":
+            try:
+                game = Game(gameDict)
+                #print game
+                gameList.append(game)
+            except KeyError as err:
+                print err
+                print gameDict
+            #print "\n"
+
+    gl = sorted(gameList, key=attrgetter('priority'), reverse=True)
+    jsonString = "{\"games\":["
+    for game in gl:
+        jsonString += game.toJsonString()
+        jsonString += ","
+    if jsonString[-1] == ",":
+        jsonString = jsonString[:-1]
+    jsonString += "]}"
+
+    return jsonString
+
 def getNowString(useLocal=False):
     # TODO Get today's date
     fordate = '20161127'
     sb = getScoreboard(fordate, useLocal)
     d = json.loads(sb)
-    nowString = getGameString(d)
+    nowString = getJsonString(d)
 
     return nowString
 
@@ -94,7 +118,7 @@ def ws_message(message):
     elif "localOne" in message.content['text']:
         sbList = getSbList()
         i = int(message.content['text'].split()[1])
-        gameString = getGameString(sbList[i])
+        gameString = getJsonString(sbList[i])
         message.reply_channel.send({
             "text": gameString
         })
@@ -103,7 +127,7 @@ def ws_message(message):
         seconds = int(message.content['text'].split()[1])
         sbList = getSbList()
         for i in range(len(sbList)):
-            gameString = getGameString(sbList[i])
+            gameString = getJsonString(sbList[i])
             message.reply_channel.send({
                 "text": gameString
             })

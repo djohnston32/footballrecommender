@@ -48,22 +48,25 @@ x Implement basic user profiles
     x Display username at top of screen
     <optional> Ask for and save favorite teams
 
-- Personalize weights based on user input ***Thursday 12/01 - Saturday 12/03***
-    - Implement weighting in Game.py
-    - Make up/down buttons next to each game's display
+- Personalize weights based on user input
+    x Implement weighting in Game.py
+    x Make too-high/too-low buttons under each game's display
         x Implement toJsonString() in Game.py
-    - Make upvote add flat number to weight for some amount of time
+        x Send json string of game objects to client instead of printstrings
+        x Convert old toString in python to javascript and execute on client
+        x Insert buttons after every game
+    - Make upvote/downvote add/subtract flat number to weight
         - Make weights save to user profile
     <optional> Use fafreco23vorite teams in weighting
 
-- Make "actual" web app ***Friday 12/02 - Saturday 12/03***
+- Make "actual" web app
     - Requests scoreboard every minute on load
     - Display details if no scoreboard
         - display simple "check back sunday" message
         - display games on Sunday ranked by gametime
         - display games on Sunday also ranked by team record
 
-<optional> Potential improvements to feedback feature ***Saturday 12/03***
+<optional> Potential improvements to feedback feature
     - Ask user basic questions on why game is in wrong spot (e.g. score not close enough, too much time, don't like teams)
     - Adjust weighting based on response
 
