@@ -4,7 +4,7 @@
     <div class="container">
       <br><br>
       <h1 class="header center orange-text">Demo</h1>
-      <h4 class="center orange-text">{{ username }}</h4>
+      <h4 id="username" class="center orange-text">{{ username }}</h4>
       <div class="row">
           <input id="index" type="number" class="validate">
           <label for="index">Poll which game list?</label>
@@ -16,6 +16,9 @@
         <button id="localPollRepeat" class="btn waves-effect waves-light">Poll Repeat (Local)</button>
         <button id="livePollOne" class="btn waves-effect waves-light">Poll Once (Live)</button>
         <button id="livePollRepeat" class="btn waves-effect waves-light">Poll Repeat (Live)</button>
+      </div>
+      <div class="row">
+        <button id="resetWeights" class="btn waves-effect waves-light">Reset Weights</button>
       </div>
       <div id="games" class="row" style="white-space:pre-wrap"></div>
       <br><br>

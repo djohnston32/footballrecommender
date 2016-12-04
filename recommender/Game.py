@@ -1,5 +1,7 @@
 import json
 
+teamRankings = {'MIN': '17', 'MIA': '7', 'CAR': '25', 'ATL': '10', 'DET': '9', 'CIN': '27', 'NYJ': '28', 'DEN': '8', 'BAL': '14', 'NYG': '4', 'TEN': '18', 'NO': '23', 'DAL': '1', 'NE': '2', 'SEA': '6', 'CHI': '29', 'TB': '16', 'PIT': '13', 'JAX': '30', 'OAK': '3', 'HO': '15', 'GB': '22', 'WAS': '11', 'KC': '5', 'PHI': '21', 'BUF': '12', 'LA': '26', 'CLE': '32', 'IND': '19', 'ARI': '24', 'SF': '31', 'SD': '20'}
+
 class Game:
     """
     Contains a real-time representation of a single football game
@@ -12,7 +14,7 @@ class Game:
     yardline = gamestate["lineOfScrimmage"] # dict
     """
 
-    def __init__(self, gameDict, weights=(10,10,10,10)):
+    def __init__(self, gameDict, weights=(10,10,5,5)):
         self.homeTeam = gameDict["game"]["homeTeam"]["Abbreviation"]
         self.awayTeam = gameDict["game"]["awayTeam"]["Abbreviation"]
 
@@ -39,6 +41,10 @@ class Game:
                 self.possession = ""
 
         self.rankscore = "None"
+        self.pScore = 0
+        self.pTime = 0
+        self.pYardLine = 0
+        self.pRank = 0
         self.priority = self.getPriority(weights)
 
     """
@@ -71,21 +77,24 @@ class Game:
 
             #Yard Line
             if self.possession and self.possession != self.yardLine["team"]:
-                pYardLine = 2 * ((50 - self.yardLine["yardLine"]) / 10)
+                pYardLine = 4 * (((50 - self.yardLine["yardLine"]) / 10) + 1)
             else:
                 pYardLine = 0
 
             #Team Ranking (based on record)
-            pRank = 0
+            avgRank = (int(teamRankings[self.homeTeam]) + int(teamRankings[self.awayTeam])) / 2
+            pRank = 2 * int(((32 - avgRank) / 32.0 * 10) + 1)
 
-            self.rankscore = "pTime: " + str(pTime) + ", pScore: " + str(pScore) + ", pYardLine: " + str(pYardLine)
 
-            pScore = pScore * weights[0]
-            pTime = pTime * weights[1]
-            pYardLine = pYardLine * weights[2]
-            pRank = pRank * weights[3]
+            self.pScore = pScore * weights[0]
+            self.pTime = pTime * weights[1]
+            self.pYardLine = pYardLine * weights[2]
+            self.pRank = pRank * weights[3]
 
-            priority += pTime + pScore + pYardLine + pRank
+            self.rankscore = "pScore: " + str(self.pScore) + ", pTime: " + str(self.pTime) + \
+                    ", pYardLine: " + str(self.pYardLine) + ", pRank: " + str(self.pRank)
+
+            priority += self.pTime + self.pScore + self.pYardLine + self.pRank
 
         return priority
 

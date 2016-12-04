@@ -17,7 +17,7 @@ def register(request):
         form.is_valid()
         username = form.cleaned_data["username"]
         password = form.cleaned_data["password"]
-        demo = form.cleaned_data["demo"]
+        goto = form.cleaned_data["goto"]
 
         new = User.objects.create_user(username=username, password=password)
         new.save()
@@ -25,7 +25,7 @@ def register(request):
         user = authenticate(username=username, password=password)
         auth_login(request, user)
 
-        path = "/recommender/demo" if demo else "/recommender/main/"
+        path = "/recommender/demo" if goto == "D" else "/recommender/main"
         return HttpResponseRedirect(path)
     else:
         form = RegisterForm()
@@ -37,12 +37,12 @@ def login(request):
         form.is_valid()
         username = form.cleaned_data["username"]
         password = form.cleaned_data["password"]
-        demo = form.cleaned_data["demo"]
+        goto = form.cleaned_data["goto"]
 
         user = authenticate(username=username, password=password)
         if user is not None:
             auth_login(request, user)
-            path = "/recommender/demo" if demo else "/recommender/main/"
+            path = "/recommender/demo" if goto == "D" else "/recommender/main"
             return HttpResponseRedirect(path)
         else:
             return render(request, "login.html", { "invalid_password": True, "form": blank_form })
@@ -55,3 +55,9 @@ def demo(request):
         'username': request.user.username
     }
     return render(request, "demo.html", context)
+
+def main(request):
+    context = {
+        'username': request.user.username
+    }
+    return render(request, "main.html", context)

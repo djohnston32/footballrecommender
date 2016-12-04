@@ -7,13 +7,14 @@ from django.conf import settings
 from operator import attrgetter
 from Game import Game
 from channels import Group
+from django.contrib.auth.models import User
 
 
 # Data access functions
 
 # TODO Prompt for username and password at startup
 USERNAME = "devinjohnston17"
-PASSWORD = ""
+PASSWORD = "freco23"
 
 CURRENT_SEASON = "2016-2017-regular"
 
@@ -49,8 +50,9 @@ def getGameString(decoded):
                 #print game
                 gameList.append(game)
             except KeyError as err:
-                print err
-                print gameDict
+                print "Error!"
+                #print err
+                #print gameDict
             #print "\n"
 
     gl = sorted(gameList, key=attrgetter('priority'), reverse=True)
@@ -60,15 +62,16 @@ def getGameString(decoded):
 
     return gameString
 
-def getJsonString(decoded):
+def getJsonString(decoded, weights):
     gameList = []
     for gameDict in decoded["scoreboard"]["gameScore"]:
         if str(gameDict["isInProgress"]) == "true":
             try:
-                game = Game(gameDict)
+                game = Game(gameDict, weights)
                 #print game
                 gameList.append(game)
             except KeyError as err:
+                print "Error"
                 print err
                 print gameDict
             #print "\n"
@@ -84,12 +87,12 @@ def getJsonString(decoded):
 
     return jsonString
 
-def getNowString(useLocal=False):
+def getNowString(weights, useLocal=False):
     # TODO Get today's date
-    fordate = '20161127'
+    fordate = '20161204'
     sb = getScoreboard(fordate, useLocal)
     d = json.loads(sb)
-    nowString = getJsonString(d)
+    nowString = getJsonString(d, weights)
 
     return nowString
 
@@ -115,40 +118,120 @@ def ws_message(message):
             "text": "TODO"
         })
 
+    elif "reduce" in message.content['text']:
+        username = message.content['text'].split()[0]
+        toReduce = message.content['text'].split()[2]
+        print "Reducing: " + toReduce
+        user = User.objects.get(username=username)
+        if toReduce == "pScore" and user.profile.pScore > 1:
+            user.profile.pScore -= 1
+        elif toReduce == "pTime" and user.profile.pTime > 1:
+            user.profile.pTime -= 1
+        elif toReduce == "pYardLine" and user.profile.pYardLine > 1:
+            user.profile.pYardLine -= 1
+        elif toReduce == "pRank" and user.profile.pRank > 1:
+            user.profile.pRank -= 1
+
+        user.save()
+
+        print user.profile.pScore
+        print user.profile.pTime
+        print user.profile.pYardLine
+        print user.profile.pRank
+
+    elif "increase" in message.content['text']:
+        username = message.content['text'].split()[0]
+        toIncrease = message.content['text'].split()[2]
+        print "Increasing: " + toIncrease
+        user = User.objects.get(username=username)
+        user.profile.pScore += 1
+        if toIncrease == "pScore":
+            user.profile.pScore += 1
+        elif toIncrease == "pTime":
+            user.profile.pTime += 1
+        elif toIncrease == "pYardLine":
+            user.profile.pYardLine += 1
+        elif toIncrease == "pRank":
+            user.profile.pRank += 1
+
+        user.save()
+
+        print user.profile.pScore
+        print user.profile.pTime
+        print user.profile.pYardLine
+        print user.profile.pRank
+
+    elif "resetWeights" in message.content['text']:
+        username = message.content['text'].split()[0]
+        user = User.objects.get(username=username)
+        print "Resetting weights"
+        user.profile.pScore = 10
+        user.profile.pTime = 10
+        user.profile.pYardLine = 5
+        user.profile.pRank = 5
+        user.save()
+
+        print user.profile.pScore
+        print user.profile.pTime
+        print user.profile.pYardLine
+        print user.profile.pRank
+
     elif "localOne" in message.content['text']:
         sbList = getSbList()
-        i = int(message.content['text'].split()[1])
-        gameString = getJsonString(sbList[i])
+        username = message.content['text'].split()[0]
+        i = int(message.content['text'].split()[2])
+
+        user = User.objects.get(username=username)
+        weights = [user.profile.pScore, user.profile.pTime, \
+                user.profile.pYardLine, user.profile.pRank]
+        gameString = getJsonString(sbList[i], weights)
+
         message.reply_channel.send({
             "text": gameString
         })
 
     elif "localRepeat" in message.content['text']:
-        seconds = int(message.content['text'].split()[1])
+        username = message.content['text'].split()[0]
+        seconds = int(message.content['text'].split()[2])
         sbList = getSbList()
         for i in range(len(sbList)):
-            gameString = getJsonString(sbList[i])
+            user = User.objects.get(username=username)
+            weights = [user.profile.pScore, user.profile.pTime, \
+                user.profile.pYardLine, user.profile.pRank]
+            gameString = getJsonString(sbList[i], weights)
+
             message.reply_channel.send({
                 "text": gameString
             })
             time.sleep(seconds)
 
-    elif message.content['text'] == "liveOne":
+    elif "liveOne" in message.content['text']:
+        username = message.content['text'].split()[0]
+
+        user = User.objects.get(username=username)
+        weights = [user.profile.pScore, user.profile.pTime, \
+                user.profile.pYardLine, user.profile.pRank]
+
         message.reply_channel.send({
-            "text": getNowString()
+            "text": getNowString(weights)
         })
 
     elif "liveRepeat" in message.content['text']:
-        seconds = int(message.content['text'].split()[1])
+        username = message.content['text'].split()[0]
+        seconds = int(message.content['text'].split()[2])
         while True:
+            user = User.objects.get(username=username)
+            weights = [user.profile.pScore, user.profile.pTime, \
+                    user.profile.pYardLine, user.profile.pRank]
+
             message.reply_channel.send({
-                "text": getNowString()
+                "text": getNowString(weights)
             })
             time.sleep(seconds)
 
     else:
         message.reply_channel.send({
-            "text": "Action not received or not recognized",
+            "text": "ERROR: action not received or not recognized",
         })
 
 # Remove from main group on websocket.disconnect

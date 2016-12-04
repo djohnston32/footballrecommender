@@ -30,15 +30,16 @@ x Get working as web app
     x Poll from NFL Scoreboard feed every minute and run getGameList
     x Make game display look nice
 
-- Improve Weighting algorithm
+x Improve Weighting algorithm
     Note: may be better to create multiple versions of getPriority (e.g. getPriority0(), getPriority1())
     x time remaining
     x score
     x yard line
         <optional> consider whether trailing team has possession
-    - team records
+    x team records
+        <optional> update every time a game ends
         <optional> weight games within division higher
-    - General Tuning (see getPriority() method in Game.py)
+    x General Tuning (see getPriority() method in Game.py)
 
 x Implement basic user profiles
     x Create register and login pages (no authentication yet)
@@ -55,16 +56,19 @@ x Implement basic user profiles
         x Send json string of game objects to client instead of printstrings
         x Convert old toString in python to javascript and execute on client
         x Insert buttons after every game
-    - Make upvote/downvote add/subtract flat number to weight
-        - Make weights save to user profile
+    x Make upvote/downvote add/subtract flat number to weight
+        x Identify metric to weight differently
+        x Send which metric to weight differently to server
+        x Make weights save to user profile
+        <optional> Switch games on client side
     <optional> Use fafreco23vorite teams in weighting
 
-- Make "actual" web app
-    - Requests scoreboard every minute on load
-    - Display details if no scoreboard
-        - display simple "check back sunday" message
-        - display games on Sunday ranked by gametime
-        - display games on Sunday also ranked by team record
+x Make "actual" web app
+    x Requests scoreboard every minute
+    x Display details if no scoreboard
+        x display simple "check back sunday" message
+        <optional> display games on Sunday ranked by gametime
+        <optional> display games on Sunday also ranked by team record
 
 <optional> Potential improvements to feedback feature
     - Ask user basic questions on why game is in wrong spot (e.g. score not close enough, too much time, don't like teams)
@@ -73,8 +77,61 @@ x Implement basic user profiles
 - Testing and adjusting ***Sunday 11/27 and Sunday 12/04***
     - Use app throughout NFL Sundays
     - Address problems as necessary
+        x Fix Poll Repeat Live in demo
+        - Clear channel queue
 
 ------------------------------------------------------------------------------------------------------------------------------
+
+***Good Demo Options***
+    - Local 100
+        - Don't care about yardline, "too high" twice on SF/NO
+
+***Demo Full Path***
+    - Register User
+    - Go to main page
+        - Say "No ongoing games, so not showing anything"
+        - <optional> Say "Thought about showing upcoming games"
+    - Back to landing page
+    - Login newly created user
+    - Go to Demo
+        - Explain four buttons
+            - Poll Repeat Live
+                - Say "Same as main page, but can input wait time before update
+            - Poll once Live
+                - Say "Same as before, no ongoing games"
+            - Poll repeat Local
+                - Say "Have list stored; captured about 200 consecutive game states (every minute)"
+                - Say "Wait time input lets me put interval between updates. Works same for live"
+            - Poll Once Local
+                - Say "First input lets me pick one in particular"
+        - Show Local 100
+            - Describe Default Ranking Algorithm
+                - Point out debug info, say it's not on main page
+                - Four categories scored out of 20 points, each with its own weight
+                - Default weighting is 10,10,5,5, for score,time,yardline,rank
+            - First game not super close, but a team is about to score
+            - Second game within one touchdown, but probably no scoring soon
+            - Third game not really close and not particularly near scoring
+            - Last game is at halftime. Not ongoing, but will be soon. Say there's similar functionality right before start of a game.
+        - Demonstrate Feedback Mechanism
+            - Say you don't care about scoring position. Just want to watch close games.
+            - You could choose "too high" on first game
+            - Pull up server to show updates
+            - In real use, scores would be updating too much to see exact change. Algorithm should invisibly improve over time.
+            - Here, can just update and see effect
+                - Click poll once again
+                - Feedback meant to be gradual, so no change yet. Let's do it one more time since it's still too high.
+            - Now you can see the change. YardLine doesn't dominate as much, so LA/CAR jumps up one.
+        - Reset Weights and update again
+    - Note that this is ideal case. Demonstrates how the application works when everything goes well.
+        - Neither ranking algorithm nor feedback mechanism are perfect
+        - Feedback especially difficult. Most effective way to improve would be to ask why a game is too low.
+        - Didn't do this because I didn't want to be super transparent to the user, but limits effectiveness with basic methods.
+        - Overview of some problems that occur
+            - Most effective when one factor dominates
+            - Not effective when differences between games are small
+        - Note weird api issues (local 200)
+
 ***Note***
     - Minimum Viable Product acheived at this point
     - Everything after is gravy
