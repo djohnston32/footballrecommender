@@ -12,6 +12,8 @@ from django.contrib.auth.models import User
 
 # Data access functions
 
+# I realize this would typically be encrypted or something, but I don't use this password anywhere else and
+#   I don't intend to do any further development with MySportsFeeds.
 USERNAME = "devinjohnston17"
 PASSWORD = "freco23"
 
