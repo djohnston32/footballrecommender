@@ -12,12 +12,12 @@ from django.contrib.auth.models import User
 
 # Data access functions
 
-# TODO Prompt for username and password at startup
 USERNAME = "devinjohnston17"
 PASSWORD = "freco23"
 
 CURRENT_SEASON = "2016-2017-regular"
 
+# Get team rankings from MySportsFeeds API
 def getStandings():
     url_standings = "https://www.mysportsfeeds.com/api/feed/pull/nfl/" + CURRENT_SEASON + \
             "/overall_team_standings.json?teamstats=W"
@@ -29,6 +29,11 @@ def getStandings():
         rankings[team['team']['Abbreviation']] = team['rank']
     return rankings
 
+"""
+    In the MySportsFeeds API, a scoreboard is a snapshot providing current data
+    for all games on a particular day. This function is called every time the
+    application needs to update using live data.
+"""
 def getScoreboard(fordate, useLocal=False):
     if useLocal:
         log = open(os.path.join(settings.BASE_DIR, 'log.txt'))
@@ -50,10 +55,9 @@ def getGameString(decoded):
                 #print game
                 gameList.append(game)
             except KeyError as err:
-                print "Error!"
-                #print err
-                #print gameDict
-            #print "\n"
+                print "Error"
+                print err
+                print gameDict
 
     gl = sorted(gameList, key=attrgetter('priority'), reverse=True)
     gameString = ""
@@ -62,6 +66,12 @@ def getGameString(decoded):
 
     return gameString
 
+"""
+    Turns a scoreboard response from MySportsFeeds into a list of Game objects,
+    and then turns those Game objects into a JSON string containing a list of
+    simple JSON representations of the Game objects. This string is what gets sent
+    to the client when it requests game data.
+"""
 def getJsonString(decoded, weights):
     gameList = []
     for gameDict in decoded["scoreboard"]["gameScore"]:
@@ -74,7 +84,6 @@ def getJsonString(decoded, weights):
                 print "Error"
                 print err
                 print gameDict
-            #print "\n"
 
     gl = sorted(gameList, key=attrgetter('priority'), reverse=True)
     jsonString = "{\"games\":["
@@ -87,6 +96,7 @@ def getJsonString(decoded, weights):
 
     return jsonString
 
+# Gets live data and performs getJsonString() on it
 def getNowString(weights, useLocal=False):
     # TODO Get today's date
     fordate = '20161204'
@@ -96,6 +106,7 @@ def getNowString(weights, useLocal=False):
 
     return nowString
 
+# For debugging and demoing. Gets a list of scoreboards from a local file.
 def getSbList():
     log = open(os.path.join(settings.BASE_DIR, '11_06.txt'))
     sbString = log.read()
@@ -111,14 +122,11 @@ def getSbList():
 def ws_add(message):
     Group("main").add(message.reply_channel)
 
-# Respond to message
+# Respond to message from client
 def ws_message(message):
-    if "main" in message.content['text']:
-        Group("main").send({
-            "text": "TODO"
-        })
 
-    elif "reduce" in message.content['text']:
+    # Reduce weight of a certain metric. Called when a "Too High" button is clicked
+    if "reduce" in message.content['text']:
         username = message.content['text'].split()[0]
         toReduce = message.content['text'].split()[2]
         print "Reducing: " + toReduce
@@ -139,6 +147,7 @@ def ws_message(message):
         print user.profile.pYardLine
         print user.profile.pRank
 
+    # Increase weight of a certain metric. Called when a "Too Low" button is clicked
     elif "increase" in message.content['text']:
         username = message.content['text'].split()[0]
         toIncrease = message.content['text'].split()[2]
@@ -161,6 +170,7 @@ def ws_message(message):
         print user.profile.pYardLine
         print user.profile.pRank
 
+    # Resets the weights to their defaults.
     elif "resetWeights" in message.content['text']:
         username = message.content['text'].split()[0]
         user = User.objects.get(username=username)
@@ -176,6 +186,7 @@ def ws_message(message):
         print user.profile.pYardLine
         print user.profile.pRank
 
+    # Responds with a single ranked list of games from a local file
     elif "localOne" in message.content['text']:
         sbList = getSbList()
         username = message.content['text'].split()[0]
@@ -190,6 +201,7 @@ def ws_message(message):
             "text": gameString
         })
 
+    # Responds repeatedly with consecutive ranked game lists from a local file
     elif "localRepeat" in message.content['text']:
         username = message.content['text'].split()[0]
         seconds = int(message.content['text'].split()[2])
@@ -205,6 +217,7 @@ def ws_message(message):
             })
             time.sleep(seconds)
 
+    # Responds with a single ranked list of live games
     elif "liveOne" in message.content['text']:
         username = message.content['text'].split()[0]
 
@@ -216,6 +229,8 @@ def ws_message(message):
             "text": getNowString(weights)
         })
 
+    # Primary feature of the application. Responds repeatedly with ranked lists of live games.
+    # This is called when "Start Recommending" is pressed on the main page
     elif "liveRepeat" in message.content['text']:
         username = message.content['text'].split()[0]
         seconds = int(message.content['text'].split()[2])
@@ -229,6 +244,7 @@ def ws_message(message):
             })
             time.sleep(seconds)
 
+    # Request not recognized
     else:
         message.reply_channel.send({
             "text": "ERROR: action not received or not recognized",

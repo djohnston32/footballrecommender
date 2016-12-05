@@ -1,5 +1,14 @@
 import json
 
+"""
+    Note on an issue:
+
+    In a real application, this teamRankings dict would be produced using the API at the beginning of every day.
+    But some design issues on my part early on in the process mean that if I want this info, I
+    need to request and produce it every time I make a new game object, which would dramatically increase the
+    response time of my application. For this reason, I have been producing this dict in the python shell
+    and placing it here at the beginning of Sundays when it needs to be updated.
+"""
 teamRankings = {'MIN': '17', 'MIA': '7', 'CAR': '25', 'ATL': '10', 'DET': '9', 'CIN': '27', 'NYJ': '28', 'DEN': '8', 'BAL': '14', 'NYG': '4', 'TEN': '18', 'NO': '23', 'DAL': '1', 'NE': '2', 'SEA': '6', 'CHI': '29', 'TB': '16', 'PIT': '13', 'JAX': '30', 'OAK': '3', 'HO': '15', 'GB': '22', 'WAS': '11', 'KC': '5', 'PHI': '21', 'BUF': '12', 'LA': '26', 'CLE': '32', 'IND': '19', 'ARI': '24', 'SF': '31', 'SD': '20'}
 
 class Game:
@@ -7,13 +16,7 @@ class Game:
     Contains a real-time representation of a single football game
     """
 
-    """
-    gamestate = sbd["scoreboard"]["gameScore"][0]
-    down = gamestate["currentDown"]
-    distance = gamestate["currentYardsRemaining"]
-    yardline = gamestate["lineOfScrimmage"] # dict
-    """
-
+    # Produce simple game object from the very convoluted json retreived from the API
     def __init__(self, gameDict, weights=(10,10,5,5)):
         self.homeTeam = gameDict["game"]["homeTeam"]["Abbreviation"]
         self.awayTeam = gameDict["game"]["awayTeam"]["Abbreviation"]
@@ -48,22 +51,20 @@ class Game:
         self.priority = self.getPriority(weights)
 
     """
-    TODO
+        Calculate viewing priority of a game based on game state.
 
-    Time
-        Make buckets smaller the later it is in the game
-        Account for OT (quarter = 5)
-    Score
-        Change scale
-        Make one- or two-score games a big p jump
-    Yardline
+        Determines scores out of 20 for each of four metrics:
+            Score (pScore)
+            Time Remaining (pTime)
+            Proximity to goalline (pYardLine)
+            Team Record (pRank)
 
-    Team Records
-        Get team record in Game object
+        These scores are then multiplied by predetermined weights and then added to
+        produce the final priority score.
 
+        Weights is a tuple where values 0 through 3 are weights for score, time remaining,
+        yardline, and team ranking, respectively
     """
-    # Weights is a tuple where values 0 through 3 are weights for score, time remaining,
-    #    yardline, and team ranking, respectively
     def getPriority(self, weights):
         priority = 0
         if not (self.isPrestart or self.isHalftime):
@@ -98,9 +99,18 @@ class Game:
 
         return priority
 
+    """
+        Produces a dictionary representing this Game's fields, then turns that dictionary into a
+        json object which is placed in string form. This is important for getting Game data
+        to the client so that it can perform its toohigh/toolow functions.
+    """
     def toJsonString(self):
         return json.dumps(self.__dict__)
 
+    """
+        For debugging in the python shell. A nearly identical function in recommender.js
+        performs this functionality when the application is actually running.
+    """
     def __str__(self):
         s = ""
         s += "Ranking Score: " + str(self.priority) + "\n"

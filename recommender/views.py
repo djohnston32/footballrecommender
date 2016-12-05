@@ -12,6 +12,7 @@ def index(request):
     return render(request, "index.html")
 
 def register(request):
+    # Register a new user
     if request.method == "POST":
         form = RegisterForm(request.POST)
         form.is_valid()
@@ -32,6 +33,7 @@ def register(request):
     return render(request, "register.html", { "form": form })
 
 def login(request):
+    # Authenticate and login an existing user
     if request.method == "POST":
         form = LoginForm(request.POST)
         form.is_valid()

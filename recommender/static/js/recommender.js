@@ -1,6 +1,8 @@
+// Used for sending messages and requests back and forth to the server
 var socket = new WebSocket("ws://" + window.location.host + "/recommender/demo/");
 var gameList = []
 
+// Displays game data on receipt of a response from the server
 socket.onmessage = function(message) {
     //alert(message.data);
     dataObject = JSON.parse(message.data);
@@ -8,6 +10,7 @@ socket.onmessage = function(message) {
     displayGameList();
 }
 
+// Gets a single list of games from a local file
 $('#localPollOne').on('click', function(event) {
     username = $('#username').text()
     var message = username + " localOne " + $('#index').val();
@@ -16,6 +19,7 @@ $('#localPollOne').on('click', function(event) {
 });
 
 
+// Repeatedly gets consecutive lists of games from a local file
 $('#localPollRepeat').on('click', function(event) {
     username = $('#username').text()
     var message = username + " localRepeat " + $('#wait').val();
@@ -23,6 +27,7 @@ $('#localPollRepeat').on('click', function(event) {
     return false;
 });
 
+// Gets a single list of live games 
 $('#livePollOne').on('click', function(event) {
     username = $('#username').text();
     var message = username + " liveOne";
@@ -30,6 +35,7 @@ $('#livePollOne').on('click', function(event) {
     return false;
 });
 
+// Repeatedly gets lists of live games. For demo only.
 $('#livePollRepeat').on('click', function(event) {
     username = $('#username').text();
     var message = username + " liveRepeat " + $('#wait').val();
@@ -37,6 +43,7 @@ $('#livePollRepeat').on('click', function(event) {
     return false;
 });
 
+// For debugging and demoing. Resets weights to defaults.
 $('#resetWeights').on('click', function(event) {
     username = $('#username').text();
     var message = username + " resetWeights";
@@ -44,16 +51,17 @@ $('#resetWeights').on('click', function(event) {
     return false;
 });
 
+// Repeatedly gets lists of live games. For main application.
 $('#main').on('click', function(event) {
     username = $('#username').text();
-    var message = username + " liveRepeat 10"
+    var message = username + " liveRepeat 60"
     socket.send(message);
     return false;
 });
 
+// Displays string representations of games and produces corresponding appropriate toohigh/toolow buttons
 function displayGameList() {
     $('#games').empty();
-    console.log("Entering displayGameList()")
     if (gameList.length == 0) {
         $('#games').append('<p>No games are being played right now. Check back later!</p>');
     } else {
@@ -80,6 +88,7 @@ function displayGameList() {
     }
 }
 
+// Converts json Game object into a nice-looking string representation for display on page
 function toString(game) {
     s = "";
 
@@ -113,15 +122,20 @@ function toString(game) {
     return s
 }
 
+// For formatting seconds in time remaining
 function zeroPad(num) {
     num = num + ""
     return num.length > 1 ? num : "0" + num
 }
 
+/*
+ * Called when "Too High" is pressed.
+ * Determines metric whose weight should be reduced.
+ * Finds metric for selected game whose value is the highest above
+ * the value for the game immediately below in ranking. Then sends
+ * message to server telling it to reduce the weight for that metric.
+ */
 function reducePlacement(gameIndex) {
-    console.log("Entering reducePlacement()")
-    console.log(gameList.length)
-    console.log(gameIndex)
     var metrics = ['pScore', 'pTime', 'pYardLine', 'pRank']
     var greatestDiff = -1;
     var toReduce = '';
@@ -133,12 +147,18 @@ function reducePlacement(gameIndex) {
         }
     }
     username = $('#username').text()
-    console.log(username)
     var message = username + " reduce " + toReduce
     socket.send(message)
     alert('Got it!')
 }
 
+/*
+ * Called when "Too Low" is pressed.
+ * Determines metric whose weight should be increased.
+ * Finds metric for selected game whose value is the highest above
+ * the value for the game immediately above in ranking. Then sends
+ * message to server telling it to increase the weight for that metric.
+ */
 function increasePlacement(gameIndex) {
     var metrics = ['pScore', 'pTime', 'pYardLine', 'pRank']
     var greatestDiff = Number.NEGATIVE_INFINITY;
@@ -152,7 +172,6 @@ function increasePlacement(gameIndex) {
     }
      
     username = $('#username').text()
-    console.log(username)
     var message = username + " increase " + toIncrease
     socket.send(message)
     alert('Got it!')

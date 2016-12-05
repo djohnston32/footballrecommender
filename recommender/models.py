@@ -6,6 +6,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
+# Database model for storing user information.
+# Username/password are in Django's user model by default
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     pScore = models.IntegerField(default=10)
