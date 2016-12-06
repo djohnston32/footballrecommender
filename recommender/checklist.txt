@@ -12,7 +12,7 @@
     + Figure out how to sort objects in python
 
 x Produce and sort list with every response
-    x Test execution time of algorithm so far (less than 1 minute essential)
+    x Test execution time of algorithm so far (less than 1 minute essential, less than 1 second ideal)
     x Pull from local data every minute, run algorithm, pretty print results
     ^ Optimize as necessary
 
@@ -35,10 +35,7 @@ x Improve Weighting algorithm
     x time remaining
     x score
     x yard line
-        <optional> consider whether trailing team has possession
     x team records
-        <optional> update every time a game ends
-        <optional> weight games within division higher
     x General Tuning (see getPriority() method in Game.py)
 
 x Implement basic user profiles
@@ -47,9 +44,8 @@ x Implement basic user profiles
     x Store username and password in database
     x Direct to app/demo after successful register/login
     x Display username at top of screen
-    <optional> Ask for and save favorite teams
 
-- Personalize weights based on user input
+x Personalize weights based on user input
     x Implement weighting in Game.py
     x Make too-high/too-low buttons under each game's display
         x Implement toJsonString() in Game.py
@@ -60,90 +56,11 @@ x Implement basic user profiles
         x Identify metric to weight differently
         x Send which metric to weight differently to server
         x Make weights save to user profile
-        <optional> Switch games on client side
-    <optional> Use fafreco23vorite teams in weighting
 
 x Make "actual" web app
     x Requests scoreboard every minute
     x Display details if no scoreboard
         x display simple "check back sunday" message
-        <optional> display games on Sunday ranked by gametime
-        <optional> display games on Sunday also ranked by team record
 
-<optional> Potential improvements to feedback feature
-    - Ask user basic questions on why game is in wrong spot (e.g. score not close enough, too much time, don't like teams)
-    - Adjust weighting based on response
-
-- Testing and adjusting ***Sunday 11/27 and Sunday 12/04***
-    - Use app throughout NFL Sundays
-    - Address problems as necessary
-        x Fix Poll Repeat Live in demo
-        - Clear channel queue
-
-------------------------------------------------------------------------------------------------------------------------------
-
-***Good Demo Options***
-    - Local 100
-        - Don't care about yardline, "too high" twice on SF/NO
-
-***Demo Full Path***
-    - Register User
-    - Go to main page
-        - Say "No ongoing games, so not showing anything"
-        - <optional> Say "Thought about showing upcoming games"
-    - Back to landing page
-    - Login newly created user
-    - Go to Demo
-        - Explain four buttons
-            - Poll Repeat Live
-                - Say "Same as main page, but can input wait time before update
-            - Poll once Live
-                - Say "Same as before, no ongoing games"
-            - Poll repeat Local
-                - Say "Have list stored; captured about 200 consecutive game states (every minute)"
-                - Say "Wait time input lets me put interval between updates. Works same for live"
-            - Poll Once Local
-                - Say "First input lets me pick one in particular"
-        - Show Local 100
-            - Describe Default Ranking Algorithm
-                - Point out debug info, say it's not on main page
-                - Four categories scored out of 20 points, each with its own weight
-                - Default weighting is 10,10,5,5, for score,time,yardline,rank
-            - First game not super close, but a team is about to score
-            - Second game within one touchdown, but probably no scoring soon
-            - Third game not really close and not particularly near scoring
-            - Last game is at halftime. Not ongoing, but will be soon. Say there's similar functionality right before start of a game.
-        - Demonstrate Feedback Mechanism
-            - Say you don't care about scoring position. Just want to watch close games.
-            - You could choose "too high" on first game
-            - Pull up server to show updates
-            - In real use, scores would be updating too much to see exact change. Algorithm should invisibly improve over time.
-            - Here, can just update and see effect
-                - Click poll once again
-                - Feedback meant to be gradual, so no change yet. Let's do it one more time since it's still too high.
-            - Now you can see the change. YardLine doesn't dominate as much, so LA/CAR jumps up one.
-        - Reset Weights and update again
-    - Note that this is ideal case. Demonstrates how the application works when everything goes well.
-        - Neither ranking algorithm nor feedback mechanism are perfect
-        - Feedback especially difficult. Most effective way to improve would be to ask why a game is too low.
-        - Didn't do this because I didn't want to be super transparent to the user, but limits effectiveness with basic methods.
-        - Overview of some problems that occur
-            - Most effective when one factor dominates
-            - Not effective when differences between games are small
-        - Note weird api issues (local 200)
-
-***Note***
-    - Minimum Viable Product acheived at this point
-    - Everything after is gravy
-    - Sanding rough edges most important, then fine tuning to look more impressive
-
-- General bug fixing ***Sunday 11/27 - Sunday 11/04***
-    - Fix any remaining persistent bugs
-    - Improve aspects that feel shoddy, but may not necessarily be bugs
-
-- *Optional* Fine tuning
-    - Continue to tune default weighting
-    ^ Continue to tune feedback mechanism
-    - Improve UI
-
-- Prepare deliverables ***Sunday 11/27 - Sunday 12/04***
+- Testing and adjusting
+    x Use app throughout NFL Sundays
